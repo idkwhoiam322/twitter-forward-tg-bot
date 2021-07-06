@@ -18,6 +18,14 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         .open("latest_tweet.txt")
         .unwrap();
 
+    // Skip if not replying to same user, ie. if it is not a thread
+    // We do not want to share replies that are just thank yous and such.
+    if let (Some(ref user), Some(ref screen_name)) = (tweet.user.as_ref(), tweet.in_reply_to_screen_name.as_ref()) {
+        if user.screen_name.ne(&screen_name.to_string()) {
+            return;
+        }
+    }
+
     if let Some(ref user) = tweet.user {
         let formatted_entry = format!(
             "Link to tweet: https://twitter.com/{}/status/{}\n\
@@ -163,9 +171,14 @@ async fn main() {
         println!("{:?}", latest_tweet);
 
         let chat = ChatId::new(-1001512385809); // https://t.me/PlayVALORANT_tweets
-        api.send_timeout(chat.text(latest_tweet.to_string()), Duration::from_secs(1))
+        // Do not attempt to post empty messages
+        // This will happen in instances such as when we have a tweet that is replying to
+        // another user.
+        if latest_tweet.to_string().ne("") {
+            api.send_timeout(chat.text(latest_tweet.to_string()), Duration::from_secs(1))
             .await
             .expect("Could not send message");
+        }
         
         for status in feed.iter() {
             prev_id[users_iter] = status.id;
