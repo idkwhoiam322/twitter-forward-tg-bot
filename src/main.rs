@@ -104,11 +104,11 @@ async fn main() {
 
     // 30s = 30*1000ms
     let sleep_time = time::Duration::from_millis(30000);
-    const TOTAL_USERS:usize = 2;
+    const TOTAL_USERS:usize = 3;
     // initialize blank id array for tweets to prevent reposting
-    let mut prev_id: [u64; TOTAL_USERS] = [0, 0];
+    let mut prev_id: [u64; TOTAL_USERS] = [0, 0, 0];
     let mut users_iter = 0;
-    let list_of_users = ["ValorantEsports", "ValorLeaks"];
+    let list_of_users = ["ValorantEsports", "ValorLeaks", "CheckValor"];
 
     // LOOP FROM HERE
     'outer: loop {
