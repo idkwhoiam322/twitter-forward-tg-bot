@@ -108,6 +108,13 @@ async fn main() {
     // initialize blank id array for tweets to prevent reposting
     let mut prev_id: [u64; TOTAL_USERS] = [0, 0, 0];
     let mut users_iter = 0;
+
+    // Select user
+    // ValorantEsports - Use this for VCT
+    // PlayVALORANT - Official VALORANT account
+    // ValorLeaks - VALORANT leaks
+    // CheckValor - VALORANT update cheker
+    // Prefer not to use multiple at a time to avoid recurring posts because of retweets
     let list_of_users = ["ValorantEsports", "ValorLeaks", "CheckValor"];
 
     // LOOP FROM HERE
@@ -125,13 +132,6 @@ async fn main() {
             .read(true)
             .open("latest_tweet.txt")
             .expect("File could not be created.");
-
-        // Select user
-        // ValorantEsports - Use this for VCT
-        // PlayVALORANT
-        // ValorLeaks
-        // Prefer not to use multiple at a time to avoid recurring posts because of retweets
-        // let target_user = user::UserID::ScreenName("ValorantEsports".into());
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
         let (_f, feed) = f.start().await.unwrap();
