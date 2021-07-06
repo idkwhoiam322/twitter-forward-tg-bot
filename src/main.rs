@@ -49,7 +49,7 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         let entry_slice: &str = &formatted_entry[..];
         writeln!(file, "{}", entry_slice)
             .expect("File could not be written into.");
-            store_latest_tweet(status);
+        store_latest_tweet(status);
         return;
     } else {
         let formatted_entry = format!("{}", &tweet.text);
@@ -70,7 +70,7 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         let entry_slice: &str = &formatted_entry[..];
         writeln!(file, "{}", entry_slice)
             .expect("File could not be written into.");
-            store_latest_tweet(status);
+        store_latest_tweet(status);
     }
 
     if let Some(ref media) = tweet.extended_entities {
@@ -127,6 +127,8 @@ async fn main() {
 
     // LOOP FROM HERE
     'outer: loop {
+        // print empty line to give a gap after each iteration
+        println!("");
         let target_user = user::UserID::ScreenName(list_of_users[users_iter].into());
         println!("Running iteration for {:?}", list_of_users[users_iter]);
         if Path::new("latest_tweet.txt").exists() {
@@ -161,7 +163,6 @@ async fn main() {
 
         for status in feed.iter() {
             store_latest_tweet(&status);
-            println!("");
             break; // post latest only
         }
 
