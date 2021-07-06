@@ -112,10 +112,6 @@ async fn main() {
 
     // 30s = 30*1000ms
     let sleep_time = time::Duration::from_millis(30000);
-    const TOTAL_USERS:usize = 3;
-    // initialize blank id array for tweets to prevent reposting
-    let mut prev_id: [u64; TOTAL_USERS] = [0, 0, 0];
-    let mut users_iter = 0;
 
     // Select user
     // ValorantEsports - Use this for VCT
@@ -123,14 +119,19 @@ async fn main() {
     // ValorLeaks - VALORANT leaks
     // CheckValor - VALORANT update cheker
     // Prefer not to use multiple at a time to avoid recurring posts because of retweets
-    let list_of_users = ["ValorantEsports", "ValorLeaks", "CheckValor"];
+    const LIST_OF_USERS: &'static [&'static str] = &["ValorantEsports", "ValorLeaks", "CheckValor"];
+
+    const TOTAL_USERS:usize = LIST_OF_USERS.len();
+    // initialize blank id array for tweets to prevent reposting
+    let mut prev_id: [u64; TOTAL_USERS] = [0; TOTAL_USERS];
+    let mut users_iter = 0;
 
     // LOOP FROM HERE
     'outer: loop {
         // print empty line to give a gap after each iteration
         println!("");
-        let target_user = user::UserID::ScreenName(list_of_users[users_iter].into());
-        println!("Running iteration for {:?}", list_of_users[users_iter]);
+        let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
+        println!("Running iteration for {:?}", LIST_OF_USERS[users_iter]);
         if Path::new("latest_tweet.txt").exists() {
             // Delete any old files
             std::fs::remove_file("latest_tweet.txt").expect("File could not be deleted.");
