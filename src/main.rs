@@ -32,56 +32,48 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             Tweet Preview:\n{} (@{}) posted",
             &user.screen_name, tweet.id, &user.name, &user.screen_name
         );
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
     }
 
     if let Some(ref screen_name) = tweet.in_reply_to_screen_name {
         let formatted_entry = format!("➜ in reply to @{}", screen_name);
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
     }
 
     if let Some(ref status) = tweet.retweeted_status {
         let formatted_entry = format!("{}", "Retweet ➜");
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
         store_latest_tweet(status);
         return;
     } else {
         let formatted_entry = format!("{}", &tweet.text);
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
     }
 
     if let Some(ref place) = tweet.place {
         let formatted_entry = format!("➜ from: {}", place.full_name);
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
     }
 
     if let Some(ref status) = tweet.quoted_status {
         let formatted_entry = format!("{}","➜ Quoting the following status:");
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
         store_latest_tweet(status);
     }
 
     if let Some(ref media) = tweet.extended_entities {
         let formatted_entry = format!("➜ Media attached to the tweet:");
-        let entry_slice: &str = &formatted_entry[..];
-        writeln!(file, "{}", entry_slice)
+        writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
         for info in &media.media {
             let formatted_entry = format!("  A {:?}", info.media_type);
-            let entry_slice: &str = &formatted_entry[..];
-            writeln!(file, "{}", entry_slice)
+            writeln!(file, "{}", formatted_entry.as_str())
                 .expect("File could not be written into.");
         }
     }
