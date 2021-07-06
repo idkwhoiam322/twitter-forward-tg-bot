@@ -104,10 +104,16 @@ async fn main() {
 
     // 30s = 30*1000ms
     let sleep_time = time::Duration::from_millis(30000);
-    let mut prev_id = 0u64;
+    const TOTAL_USERS:usize = 2;
+    // initialize blank id array for tweets to prevent reposting
+    let mut prev_id: [u64; TOTAL_USERS] = [0, 0];
+    let mut users_iter = 0;
+    let list_of_users = ["ValorantEsports", "ValorLeaks"];
 
     // LOOP FROM HERE
     'outer: loop {
+        let target_user = user::UserID::ScreenName(list_of_users[users_iter].into());
+        println!("Running iteration for {:?}", list_of_users[users_iter]);
         if Path::new("latest_tweet.txt").exists() {
             // Delete any old files
             std::fs::remove_file("latest_tweet.txt").expect("File could not be deleted.");
@@ -123,16 +129,24 @@ async fn main() {
         // Select user
         // ValorantEsports - Use this for VCT
         // PlayVALORANT
+        // ValorLeaks
         // Prefer not to use multiple at a time to avoid recurring posts because of retweets
-        let target_user = user::UserID::ScreenName("ValorantEsports".into());
+        // let target_user = user::UserID::ScreenName("ValorantEsports".into());
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
         let (_f, feed) = f.start().await.unwrap();
 
         for status in feed.iter() {
-            if  status.id == prev_id {
+            if  status.id == prev_id[users_iter] {
                 println!("No new tweet found! Sleeping for {:?}.", sleep_time);
                 thread::sleep(sleep_time);
+                // user must be changed before we go to next loop
+                // Check for next user
+                if users_iter == TOTAL_USERS-1 {
+                    users_iter = 0;
+                } else {
+                    users_iter = users_iter + 1;
+                }
                 continue 'outer;
             }
         }
@@ -154,7 +168,14 @@ async fn main() {
             .expect("Could not send message");
         
         for status in feed.iter() {
-            prev_id = status.id;
+            prev_id[users_iter] = status.id;
+        }
+
+        // Check for next user
+        if users_iter == TOTAL_USERS-1 {
+            users_iter = 0;
+        } else {
+            users_iter = users_iter + 1;
         }
     }
     // LOOP TILL HERE
