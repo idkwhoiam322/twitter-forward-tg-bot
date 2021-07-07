@@ -204,6 +204,7 @@ async fn main() {
             api.spawn(chat
                         .text(latest_tweet.to_string())
                         .parse_mode(ParseMode::Html)
+                        .disable_preview()
                     );
         }
 
