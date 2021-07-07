@@ -72,12 +72,6 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             .expect("File could not be written into.");
     }
 
-    if let Some(ref place) = tweet.place {
-        let formatted_entry = format!("➜ from: {}", place.full_name);
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
-    }
-
     let formatted_entry = format!("{}", &tweet.text);
     writeln!(file, "{}", formatted_entry.as_str())
         .expect("File could not be written into.");
