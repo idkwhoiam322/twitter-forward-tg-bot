@@ -101,18 +101,23 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
 
 #[tokio::main]
 async fn main() {
-    let tg_bot_token = env::var("TELEGRAM_BOT_TOKEN").expect("set TELEGRAM_BOT_TOKEN, thank you");
+    let tg_bot_token = env::var("TELEGRAM_BOT_TOKEN")
+                        .expect("set TELEGRAM_BOT_TOKEN, thank you");
     let api = Api::new(tg_bot_token);
 
-    let con_api_key = env::var("CONSUMER_API_KEY").expect("set CONSUMER_API_KEY, thank you");
-    let con_api_secret_key = env::var("CONSUMER_API_SECRET_KEY").expect("set CONSUMER_API_SECRET_KEY, thank you");
+    let con_api_key = env::var("CONSUMER_API_KEY")
+                        .expect("set CONSUMER_API_KEY, thank you");
+    let con_api_secret_key = env::var("CONSUMER_API_SECRET_KEY")
+                                .expect("set CONSUMER_API_SECRET_KEY, thank you");
     let con_token = egg_mode::KeyPair::new(
         con_api_key,
         con_api_secret_key,
     );
 
-    let access_key = env::var("ACCESS_KEY").expect("set ACCESS_KEY, thank you");
-    let access_secret_key = env::var("ACCESS_SECRET_KEY").expect("set ACCESS_SECRET_KEY, thank you");
+    let access_key = env::var("ACCESS_KEY")
+                        .expect("set ACCESS_KEY, thank you");
+    let access_secret_key = env::var("ACCESS_SECRET_KEY")
+                                .expect("set ACCESS_SECRET_KEY, thank you");
     let access_token = egg_mode::KeyPair::new(
         access_key,
         access_secret_key,
@@ -139,7 +144,8 @@ async fn main() {
         println!("Iteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
         if Path::new("latest_tweet.txt").exists() {
             // Delete any old files
-            std::fs::remove_file("latest_tweet.txt").expect("File could not be deleted.");
+            std::fs::remove_file("latest_tweet.txt")
+                .expect("File could not be deleted.");
         }
         // initialize latest tweet struct
         let mut latest_tweet_file = std::fs::OpenOptions::new()
@@ -173,7 +179,8 @@ async fn main() {
 
         // Save latest tweet from file to a string
         let mut latest_tweet = String::new();
-        latest_tweet_file.read_to_string(&mut latest_tweet).expect("File could not be read.");
+        latest_tweet_file.read_to_string(&mut latest_tweet)
+            .expect("File could not be read.");
         println!("{:?}", latest_tweet);
 
 
