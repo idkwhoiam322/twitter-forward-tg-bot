@@ -73,10 +73,6 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             .expect("File could not be written into.");
         store_latest_tweet(status);
         return;
-    } else {
-        let formatted_entry = format!("{}", &tweet.text);
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
     }
 
     if let Some(ref place) = tweet.place {
@@ -85,13 +81,16 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             .expect("File could not be written into.");
     }
 
+    let formatted_entry = format!("{}", &tweet.text);
+    writeln!(file, "{}", formatted_entry.as_str())
+        .expect("File could not be written into.");
+
     if let Some(ref status) = tweet.quoted_status {
         let formatted_entry = format!("{}","➜ Quoting the following status:");
         writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
         store_latest_tweet(status);
     }
-
 }
 
 #[tokio::main]
