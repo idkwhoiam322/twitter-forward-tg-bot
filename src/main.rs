@@ -58,7 +58,7 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
 
     if let Some(ref user) = tweet.user {
         let formatted_entry = format!(
-            "Tweet Source: https://twitter.com/{}/status/{}\n\
+            "<a href='https://twitter.com/{}/status/{}'>Tweet Source</a>\n\
             {} (@{}):",
             &user.screen_name, tweet.id, &user.name, &user.screen_name
         );
