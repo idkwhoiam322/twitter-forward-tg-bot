@@ -117,13 +117,14 @@ async fn main() {
     // initialize blank id array for tweets to prevent reposting
     let mut prev_id: [u64; TOTAL_USERS] = [0; TOTAL_USERS];
     let mut users_iter = 0;
+    let mut total_iter:u64 = 0;
 
     // LOOP FROM HERE
     'outer: loop {
         // print empty line to give a gap after each iteration
         println!("");
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
-        println!("Running iteration for {:?}", LIST_OF_USERS[users_iter]);
+        println!("Iteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
         if Path::new("latest_tweet.txt").exists() {
             // Delete any old files
             std::fs::remove_file("latest_tweet.txt").expect("File could not be deleted.");
@@ -164,7 +165,15 @@ async fn main() {
         latest_tweet_file.read_to_string(&mut latest_tweet).expect("File could not be read.");
         println!("{:?}", latest_tweet);
 
-        let chat = ChatId::new(-1001512385809); // https://t.me/PlayVALORANT_tweets
+
+        let mut chat = ChatId::new(-1001512385809); // https://t.me/PlayVALORANT_tweets
+
+        // Horrible workaround to not post repeated posts for now.
+        // Any new posts during updating will be missed
+        if total_iter < TOTAL_USERS as u64 {
+            chat = ChatId::new(-540381478); // test chat
+        }
+
         // Do not attempt to post empty messages
         // This will happen in instances such as when we have a tweet that is replying to
         // another user.
@@ -184,6 +193,8 @@ async fn main() {
         } else {
             users_iter = users_iter + 1;
         }
+
+        total_iter = total_iter + 1;
     }
     // LOOP TILL HERE
 }
