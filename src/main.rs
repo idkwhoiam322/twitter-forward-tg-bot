@@ -155,9 +155,8 @@ async fn main() {
             }
         }
 
-        for status in feed.iter() {
+        for status in feed.iter().take(1) {
             store_latest_tweet(&status);
-            break; // post latest only
         }
 
         // Save latest tweet from file to a string
