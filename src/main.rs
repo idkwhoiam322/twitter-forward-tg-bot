@@ -203,6 +203,7 @@ async fn main() {
         if latest_tweet.to_string().ne("") {
             api.spawn(chat
                         .text(latest_tweet.to_string())
+                        .parse_mode(ParseMode::Html)
                     );
         }
 
