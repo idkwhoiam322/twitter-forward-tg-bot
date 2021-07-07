@@ -53,8 +53,8 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
 
     if let Some(ref user) = tweet.user {
         let formatted_entry = format!(
-            "Link to tweet: https://twitter.com/{}/status/{}\n\
-            Tweet Preview:\n{} (@{}) posted",
+            "Tweet Source: https://twitter.com/{}/status/{}\n\
+            {} (@{}):",
             &user.screen_name, tweet.id, &user.name, &user.screen_name
         );
         writeln!(file, "{}", formatted_entry.as_str())
@@ -92,16 +92,6 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         store_latest_tweet(status);
     }
 
-    if let Some(ref media) = tweet.extended_entities {
-        let formatted_entry = format!("➜ Media attached to the tweet:");
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
-        for info in &media.media {
-            let formatted_entry = format!("  A {:?}", info.media_type);
-            writeln!(file, "{}", formatted_entry.as_str())
-                .expect("File could not be written into.");
-        }
-    }
 }
 
 #[tokio::main]
