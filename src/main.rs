@@ -15,12 +15,14 @@ use std::{thread, time};
 // PlayVALORANT - Official VALORANT account
 // ValorLeaks - VALORANT leaks
 // CheckValor - VALORANT update checker
+// VLRdotgg - Official account for https://www.vlr.gg/
 const LIST_OF_USERS: &'static [&'static str] =
     &[
         "ValorantEsports",
         "ValorLeaks",
         "CheckValor",
-        "PlayVALORANT"
+        "PlayVALORANT",
+        "VLRdotgg"
     ];
 
 fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
