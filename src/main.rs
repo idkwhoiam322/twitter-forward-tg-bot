@@ -11,6 +11,14 @@ use std::time::Duration;
 
 use std::{thread, time};
 
+// Select user
+// ValorantEsports - Use this for VCT
+// PlayVALORANT - Official VALORANT account
+// ValorLeaks - VALORANT leaks
+// CheckValor - VALORANT update cheker
+// Prefer not to use multiple at a time to avoid recurring posts because of retweets
+const LIST_OF_USERS: &'static [&'static str] = &["ValorantEsports", "ValorLeaks", "CheckValor"];
+
 fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
     let mut file = OpenOptions::new()
         .write(true)
@@ -23,6 +31,14 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
     if let (Some(ref user), Some(ref screen_name)) = (tweet.user.as_ref(), tweet.in_reply_to_screen_name.as_ref()) {
         if user.screen_name.ne(&screen_name.to_string()) {
             return;
+        }
+    }
+
+    for user in &tweet.entities.user_mentions {
+        for cur_user in LIST_OF_USERS {
+            if user.screen_name.eq(cur_user) {
+                return;
+            }
         }
     }
 
@@ -104,14 +120,6 @@ async fn main() {
 
     // 30s = 30*1000ms
     let sleep_time = time::Duration::from_millis(30000);
-
-    // Select user
-    // ValorantEsports - Use this for VCT
-    // PlayVALORANT - Official VALORANT account
-    // ValorLeaks - VALORANT leaks
-    // CheckValor - VALORANT update cheker
-    // Prefer not to use multiple at a time to avoid recurring posts because of retweets
-    const LIST_OF_USERS: &'static [&'static str] = &["ValorantEsports", "ValorLeaks", "CheckValor"];
 
     const TOTAL_USERS:usize = LIST_OF_USERS.len();
     // initialize blank id array for tweets to prevent reposting
