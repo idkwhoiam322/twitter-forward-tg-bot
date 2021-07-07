@@ -14,7 +14,7 @@ use std::{thread, time};
 // ValorantEsports - Use this for VCT
 // PlayVALORANT - Official VALORANT account
 // ValorLeaks - VALORANT leaks
-// CheckValor - VALORANT update cheker
+// CheckValor - VALORANT update checker
 const LIST_OF_USERS: &'static [&'static str] =
     &[
         "ValorantEsports",
