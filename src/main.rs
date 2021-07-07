@@ -16,7 +16,6 @@ use std::{thread, time};
 // PlayVALORANT - Official VALORANT account
 // ValorLeaks - VALORANT leaks
 // CheckValor - VALORANT update cheker
-// Prefer not to use multiple at a time to avoid recurring posts because of retweets
 const LIST_OF_USERS: &'static [&'static str] =
     &["ValorantEsports", "ValorLeaks", "CheckValor", "PlayVALORANT"];
 
