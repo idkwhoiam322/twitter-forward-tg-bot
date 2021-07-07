@@ -51,6 +51,11 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         }
     }
 
+    if let Some(ref status) = tweet.retweeted_status {
+        store_latest_tweet(status);
+        return;
+    }
+
     if let Some(ref user) = tweet.user {
         let formatted_entry = format!(
             "Tweet Source: https://twitter.com/{}/status/{}\n\
@@ -65,14 +70,6 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         let formatted_entry = format!("➜ in reply to @{}", screen_name);
         writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
-    }
-
-    if let Some(ref status) = tweet.retweeted_status {
-        let formatted_entry = format!("{}", "Retweet ➜");
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
-        store_latest_tweet(status);
-        return;
     }
 
     if let Some(ref place) = tweet.place {
