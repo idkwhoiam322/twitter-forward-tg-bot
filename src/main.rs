@@ -206,7 +206,7 @@ async fn main() {
             .await
             .expect("Could not send message");
         }
-        
+
         for status in feed.iter() {
             prev_id[users_iter] = status.id;
         }
