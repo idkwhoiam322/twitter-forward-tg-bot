@@ -28,7 +28,8 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
 
     // Skip if not replying to same user, ie. if it is not a thread
     // We do not want to share replies that are just thank yous and such.
-    if let (Some(ref user), Some(ref screen_name)) = (tweet.user.as_ref(), tweet.in_reply_to_screen_name.as_ref()) {
+    if let (Some(ref user), Some(ref screen_name)) =
+        (tweet.user.as_ref(), tweet.in_reply_to_screen_name.as_ref()) {
         if user.screen_name.ne(&screen_name.to_string()) {
             return;
         }
