@@ -34,6 +34,10 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
         }
     }
 
+    // There can be instances where one twitter account might retweet
+    // a post from another one, say @PlayVALORANT retweets a post from
+    // @ValorantEsports. Our bot already tracks posts from @ValorantEsports
+    // so it is unnecessary to share the retweet as well.
     for user in &tweet.entities.user_mentions {
         for cur_user in LIST_OF_USERS {
             if user.screen_name.eq(cur_user) {
