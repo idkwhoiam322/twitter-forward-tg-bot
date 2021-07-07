@@ -17,7 +17,12 @@ use std::{thread, time};
 // ValorLeaks - VALORANT leaks
 // CheckValor - VALORANT update cheker
 const LIST_OF_USERS: &'static [&'static str] =
-    &["ValorantEsports", "ValorLeaks", "CheckValor", "PlayVALORANT"];
+    &[
+        "ValorantEsports",
+        "ValorLeaks",
+        "CheckValor",
+        "PlayVALORANT"
+    ];
 
 fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
     let mut file = OpenOptions::new()
