@@ -66,8 +66,8 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             .expect("File could not be written into.");
     }
 
-    if let Some(ref screen_name) = tweet.in_reply_to_screen_name {
-        let formatted_entry = format!("➜ in reply to @{}", screen_name);
+    if let Some(ref _screen_name) = tweet.in_reply_to_screen_name {
+        let formatted_entry = format!("➜ Thread reply:");
         writeln!(file, "{}", formatted_entry.as_str())
             .expect("File could not be written into.");
     }
