@@ -7,7 +7,6 @@ use std::env;
 use egg_mode::user;
 
 use telegram_bot::*;
-use std::time::Duration;
 
 use std::{thread, time};
 
@@ -202,9 +201,9 @@ async fn main() {
         // This will happen in instances such as when we have a tweet that is replying to
         // another user.
         if latest_tweet.to_string().ne("") {
-            api.send_timeout(chat.text(latest_tweet.to_string()), Duration::from_secs(1))
-            .await
-            .expect("Could not send message");
+            api.spawn(chat
+                        .text(latest_tweet.to_string())
+                    );
         }
 
         for status in feed.iter() {
