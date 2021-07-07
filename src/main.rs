@@ -114,8 +114,7 @@ async fn main() {
         access: access_token,
     };
 
-    // 30s = 30*1000ms
-    let sleep_time = time::Duration::from_millis(30000);
+    let sleep_time = time::Duration::from_millis(1000);
 
     const TOTAL_USERS:usize = LIST_OF_USERS.len();
     // initialize blank id array for tweets to prevent reposting
