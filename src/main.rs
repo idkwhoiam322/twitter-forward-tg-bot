@@ -182,7 +182,7 @@ async fn main() {
         // Expand each t.co url
         let mut new_tweet = String::new();
         if latest_tweet.contains("https://t.co/") {
-            for mat in Regex::new(r"\bhttps://t.co/[a-zA-Z0-9]*\b").unwrap().find_iter(&latest_tweet) {
+            for mat in Regex::new(r"\bhttps://t\.co/[a-zA-Z0-9]*\b").unwrap().find_iter(&latest_tweet) {
                 let url = &latest_tweet[mat.start()..mat.end()];
                 println!("old url: {:?}", url);
                 match urlexpand::unshorten(&url, None) {
