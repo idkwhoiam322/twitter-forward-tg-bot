@@ -180,21 +180,19 @@ async fn main() {
         }
 
         // Expand each t.co url
-        let mut new_tweet = String::new();
+        let mut new_tweet = latest_tweet.clone();
         if latest_tweet.contains("https://t.co/") {
             for mat in Regex::new(r"\bhttps://t\.co/[a-zA-Z0-9]*\b").unwrap().find_iter(&latest_tweet) {
                 let url = &latest_tweet[mat.start()..mat.end()];
                 println!("old url: {:?}", url);
                 match urlexpand::unshorten(&url, None) {
                     Some(new_url) => {
-                        new_tweet = str::replace(&latest_tweet, url, &new_url);
+                        new_tweet = str::replace(&new_tweet, url, &new_url);
                         println!("new url: {:?}", new_url);
                     }
                     None => println!("URL {:?} could not be expanded.", url),
                 };
             }
-        } else {
-            new_tweet = latest_tweet;
         }
         println!("Final Tweet:\n{:?}", new_tweet);
         // Do not attempt to post empty messages
