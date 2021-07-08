@@ -10,6 +10,8 @@ use telegram_bot::*;
 
 use std::{thread, time};
 
+use regex::Regex;
+
 // Select user
 // ValorantEsports - Use this for VCT
 // PlayVALORANT - Official VALORANT account
@@ -167,7 +169,6 @@ async fn main() {
         let mut latest_tweet = String::new();
         latest_tweet_file.read_to_string(&mut latest_tweet)
             .expect("File could not be read.");
-        println!("{:?}", latest_tweet);
 
 
         let mut chat = ChatId::new(-1001512385809); // https://t.me/PlayVALORANT_tweets
@@ -178,12 +179,30 @@ async fn main() {
             chat = ChatId::new(-540381478); // test chat
         }
 
+        // Expand each t.co url
+        let mut new_tweet = String::new();
+        if latest_tweet.contains("https://t.co/") {
+            for mat in Regex::new(r"\bhttps://t.co/[a-zA-Z0-9]*\b").unwrap().find_iter(&latest_tweet) {
+                let url = &latest_tweet[mat.start()..mat.end()];
+                println!("old url: {:?}", url);
+                match urlexpand::unshorten(&url, None) {
+                    Some(new_url) => {
+                        new_tweet = str::replace(&latest_tweet, url, &new_url);
+                        println!("new url: {:?}", new_url);
+                    }
+                    None => println!("URL {:?} could not be expanded.", url),
+                };
+            }
+        } else {
+            new_tweet = latest_tweet;
+        }
+        println!("Final Tweet:\n{:?}", new_tweet);
         // Do not attempt to post empty messages
         // This will happen in instances such as when we have a tweet that is replying to
         // another user.
-        if latest_tweet.to_string().ne("") {
+        if new_tweet.to_string().ne("") {
             api.spawn(chat
-                        .text(latest_tweet.to_string())
+                        .text(new_tweet.to_string())
                         .parse_mode(ParseMode::Html)
                         .disable_preview()
                     );
