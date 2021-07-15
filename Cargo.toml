@@ -3,6 +3,8 @@ name = "twitter-forward-tg-bot"
 version = "0.2.0"
 authors = ["idkwhoiam322 <idkwhoiam322@raphielgang.org>"]
 edition = "2018"
+description = "A Telegram bot that forwards tweets from a list of users to a Telegram chat/channel"
+repository = "https://github.com/idkwhoiam322/twitter-forward-tg-bot"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
