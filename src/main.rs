@@ -77,9 +77,7 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
     }
 }
 
-#[tokio::main]
-async fn main() {
-    let telegram_api = Api::new(get_telegram_bot_token());
+async fn send_tweets(telegram_api: Api) {
     let twitter_token = get_twitter_token();
 
     let sleep_time = time::Duration::from_millis(1000);
@@ -186,4 +184,14 @@ async fn main() {
         total_iter = total_iter + 1;
     }
     // LOOP TILL HERE
+}
+
+async fn run() {
+    let telegram_api = Api::new(get_telegram_bot_token());
+    send_tweets(telegram_api).await;
+}
+
+#[tokio::main]
+async fn main() {
+    run().await;
 }
