@@ -118,8 +118,8 @@ async fn send_tweets(telegram_api: Api) {
         latest_tweet_file.read_to_string(&mut latest_tweet)
             .expect("File could not be read.");
 
-
-        let mut chat = ChatId::new(-1001512385809); // https://t.me/PlayVALORANT_tweets
+        // https://t.me/PlayVALORANT_tweets
+        let mut chat = ChatId::new(-1001512385809);
 
         // Horrible workaround to not post repeated posts for now.
         // Any new posts during updating will be missed
