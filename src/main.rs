@@ -38,7 +38,7 @@ async fn send_tweets(telegram_api: Api) {
         // Delete any old files
         delete_file("latest_tweet.txt".to_string());
 
-        // initialize latest tweet struct
+        // create new file to store latest tweet
         let mut latest_tweet_file = create_file("latest_tweet.txt".to_string());
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
