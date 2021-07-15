@@ -8,15 +8,10 @@ mod storage;
 use storage::store_latest_tweet;
 
 use std::io::Read;
-
 use egg_mode::user;
-
 use telegram_bot::*;
-
 use std::{thread, time};
-
 use regex::Regex;
-
 use chrono::prelude::*;
 
 async fn send_tweets(telegram_api: Api) {
