@@ -17,6 +17,8 @@ use std::{thread, time};
 
 use regex::Regex;
 
+use chrono::prelude::*;
+
 async fn send_tweets(telegram_api: Api) {
     let twitter_token = get_twitter_token();
 
@@ -123,6 +125,17 @@ async fn send_tweets(telegram_api: Api) {
 
 async fn run() {
     let telegram_api = Api::new(get_telegram_bot_token());
+
+    let chat = ChatId::new(-540381478); // test chat
+    let utc_time: DateTime<Utc> = chrono::Utc::now();
+    let startpost_text = format!("Starting bot at {}-{}-{} {}:{}:{} UTC.",
+                utc_time.year(), utc_time.month(), utc_time.day(),
+                utc_time.hour(), utc_time.minute(), utc_time.second());
+
+    telegram_api.spawn(chat
+        .text(startpost_text)
+    );
+
     send_tweets(telegram_api).await;
 }
 
