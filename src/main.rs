@@ -2,11 +2,10 @@ mod users;
 use users::LIST_OF_USERS;
 mod creds;
 use creds::credentials::*;
+mod file_handling;
+use file_handling::functions::*;
 
 use std::io::Read;
-use std::fs::OpenOptions;
-use std::io::prelude::*;
-use std::path::Path;
 
 use egg_mode::user;
 
@@ -17,12 +16,7 @@ use std::{thread, time};
 use regex::Regex;
 
 fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
-    let mut file = OpenOptions::new()
-        .write(true)
-        .append(true)
-        .open("latest_tweet.txt")
-        .unwrap();
-
+    let file_name = String::from("latest_tweet.txt");
     // Skip if not replying to same user, ie. if it is not a thread
     // We do not want to share replies that are just thank yous and such.
     if let (Some(ref user), Some(ref screen_name)) =
@@ -55,24 +49,20 @@ fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
             {} (@{}):",
             &user.screen_name, tweet.id, &user.name, &user.screen_name
         );
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
+        write_to_file(file_name.clone(), formatted_entry.as_str());
     }
 
     if let Some(ref _screen_name) = tweet.in_reply_to_screen_name {
         let formatted_entry = format!("➜ Thread reply:");
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
+        write_to_file(file_name.clone(), formatted_entry.as_str());
     }
 
     let formatted_entry = format!("{}", &tweet.text);
-    writeln!(file, "{}", formatted_entry.as_str())
-        .expect("File could not be written into.");
+    write_to_file(file_name.clone(), formatted_entry.as_str());
 
     if let Some(ref status) = tweet.quoted_status {
         let formatted_entry = format!("{}","➜ Quoting the following status:");
-        writeln!(file, "{}", formatted_entry.as_str())
-            .expect("File could not be written into.");
+        write_to_file(file_name.clone(), formatted_entry.as_str());
         store_latest_tweet(status);
     }
 }
@@ -94,18 +84,12 @@ async fn send_tweets(telegram_api: Api) {
         println!("");
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
         println!("Iteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
-        if Path::new("latest_tweet.txt").exists() {
-            // Delete any old files
-            std::fs::remove_file("latest_tweet.txt")
-                .expect("File could not be deleted.");
-        }
+
+        // Delete any old files
+        delete_file("latest_tweet.txt".to_string());
+
         // initialize latest tweet struct
-        let mut latest_tweet_file = std::fs::OpenOptions::new()
-            .write(true)
-            .create(true)
-            .read(true)
-            .open("latest_tweet.txt")
-            .expect("File could not be created.");
+        let mut latest_tweet_file = create_file("latest_tweet.txt".to_string());
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
         let (_f, feed) = f.start().await.unwrap();
