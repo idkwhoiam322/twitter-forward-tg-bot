@@ -1,6 +1,6 @@
 [package]
 name = "twitter-forward-tg-bot"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["idkwhoiam322 <idkwhoiam322@raphielgang.org>"]
 edition = "2018"
 
