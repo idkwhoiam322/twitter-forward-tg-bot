@@ -69,12 +69,13 @@ async fn send_tweets(telegram_api: Api) {
             .expect("File could not be read.");
 
         // https://t.me/PlayVALORANT_tweets
-        let mut chat = ChatId::new(-1001512385809);
+        let chat = ChatId::new(-1001512385809);
 
-        // Horrible workaround to not post repeated posts for now.
-        // Any new posts during updating will be missed
+        // Don't post the first set of tweets to channel to prevent reposts
+        // Any new posts during updating or heroku dyno sleep cycle will be missed
+        let mut skip = 0;
         if total_iter < TOTAL_USERS as u64 {
-            chat = ChatId::new(-540381478); // test chat
+           skip = 1;
         }
 
         // Expand each t.co url
@@ -96,7 +97,7 @@ async fn send_tweets(telegram_api: Api) {
         // Do not attempt to post empty messages
         // This will happen in instances such as when we have a tweet that is replying to
         // another user.
-        if new_tweet.to_string().ne("") {
+        if new_tweet.to_string().ne("") && skip == 0 {
             telegram_api.spawn(chat
                         .text(new_tweet.to_string())
                         .parse_mode(ParseMode::Html)
