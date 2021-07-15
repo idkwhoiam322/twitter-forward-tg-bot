@@ -1,3 +1,6 @@
+mod users;
+use users::LIST_OF_USERS;
+
 use std::io::Read;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
@@ -11,21 +14,6 @@ use telegram_bot::*;
 use std::{thread, time};
 
 use regex::Regex;
-
-// Select user
-// ValorantEsports - Use this for VCT
-// PlayVALORANT - Official VALORANT account
-// ValorLeaks - VALORANT leaks
-// CheckValor - VALORANT update checker
-// VLRdotgg - Official account for https://www.vlr.gg/
-const LIST_OF_USERS: &'static [&'static str] =
-    &[
-        "ValorantEsports",
-        "ValorLeaks",
-        "CheckValor",
-        "PlayVALORANT",
-        "VLRdotgg"
-    ];
 
 fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet) {
     let mut file = OpenOptions::new()
