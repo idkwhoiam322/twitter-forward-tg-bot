@@ -6,6 +6,7 @@ mod file_handling;
 use file_handling::functions::*;
 mod storage;
 use storage::store_latest_tweet;
+mod logger;
 
 use std::io::Read;
 use egg_mode::user;
@@ -130,6 +131,8 @@ async fn run() {
     telegram_api.spawn(chat
         .text(startpost_text)
     );
+
+    logger::run(&telegram_api, chat);
 
     send_tweets(telegram_api).await;
 }

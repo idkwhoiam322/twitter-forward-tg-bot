@@ -1680,6 +1680,8 @@ dependencies = [
  "chrono",
  "egg-mode",
  "regex",
+ "serde",
+ "serde_json",
  "telegram-bot",
  "tokio 0.2.25",
  "urlexpand",
