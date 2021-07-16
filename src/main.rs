@@ -57,7 +57,7 @@ async fn send_tweets(telegram_api: Api) {
         }
 
         for status in feed.iter().take(1) {
-            store_latest_tweet(&status);
+            store_latest_tweet(&status, false);
         }
 
         // Save latest tweet from file to a string
