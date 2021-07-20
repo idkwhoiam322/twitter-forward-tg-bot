@@ -33,17 +33,14 @@ pub fn run(telegram_api: &Api, chat: ChatId) {
 
     let last_worker_log = Command::new("curl")
                             .arg(log_worker.logplex_url)
-                            .args(&["--max-time", "2"])
                             .output()
                             .expect("log_worker could not be reached OR curl could not be run.");
     let last_api_log = Command::new("curl")
                         .arg(log_api.logplex_url)
-                        .args(&["--max-time", "2"])
                         .output()
                         .expect("log_api could not be reached OR curl could not be run.");
     let last_heroku_worker_log = Command::new("curl")
                                     .arg(log_heroku_worker.logplex_url)
-                                    .args(&["--max-time", "2"])
                                     .output()
                                     .expect("log_heroku_worker could not be reached OR curl could not be run.");
     let mut formatted_log = format!("{:?}\n{:?}\n{:?}",  last_worker_log, last_api_log, last_heroku_worker_log);
