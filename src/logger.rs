@@ -16,11 +16,10 @@ pub struct Logger {
 pub fn run(telegram_api: &Api, chat: ChatId) {
     // This script generates jsons that contain
     // logger url using Heroku API.
-    let logger_script = Command::new("bash")
-                            .arg("scripts/logger.sh")
-                            .output()
-                            .expect("Script could not be found.");
-    println!("logger script: {:?}", logger_script);
+    Command::new("bash")
+        .arg("scripts/logger.sh")
+        .output()
+        .expect("Script could not be found.");
 
     let log_worker = get_logger_from_json("worker_log_details.json").unwrap();
     let log_api = get_logger_from_json("api_log_details.json").unwrap();
