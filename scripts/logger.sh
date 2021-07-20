@@ -25,7 +25,7 @@ curl -o "api_log_details.json" -n -X POST https://api.heroku.com/apps/twitter-fo
 rm -rf "heroku_worker_log_details.json";
 curl -o "heroku_worker_log_details.json" -n -X POST https://api.heroku.com/apps/twitter-forward-tg-bot/log-sessions \
   -d '{
-  "dyno": "api",
+  "dyno": "worker",
   "lines": 1500,
   "source": "heroku"
 }' \
