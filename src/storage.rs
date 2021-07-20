@@ -3,11 +3,26 @@ use crate::file_handling::functions::*;
 
 pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
     let file_name = String::from("latest_tweet.txt");
+    let mut do_not_skip = false;
+
     // Skip if not replying to same user, ie. if it is not a thread
     // We do not want to share replies that are just thank yous and such.
     if let (Some(ref user), Some(ref screen_name)) =
         (tweet.user.as_ref(), tweet.in_reply_to_screen_name.as_ref()) {
-        if user.screen_name.ne(&screen_name.to_string()) {
+        // There may be a case where LIST_OF_USERS may reply to someone else
+        // but may contain information that they want to share.
+        // If such a tweet is retweeted, we want this to be forwarded.
+        // Post by someone else
+        // |
+        // |
+        // ---- Post by LIST_OF_USERS ( id_1234 ) <-- Post will not be shared
+        // If id_1234 is then retweeted, it will be shared.
+        // TL;DR: Post retweeted replies.
+        if is_retweet {
+            do_not_skip = true;
+        }
+        // Replying to someone that isn't the original thread starter
+        if user.screen_name.ne(&screen_name.to_string()) && !do_not_skip {
             return;
         }
     }
@@ -18,7 +33,7 @@ pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
     // so it is unnecessary to share the retweet as well.
     for user in &tweet.entities.user_mentions {
         for cur_user in LIST_OF_USERS {
-            if user.screen_name.eq(cur_user) && is_retweet == true {
+            if user.screen_name.eq(cur_user) && is_retweet && !do_not_skip {
                 return;
             }
         }
