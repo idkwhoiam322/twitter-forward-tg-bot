@@ -1,10 +1,9 @@
 use std::env;
+use teloxide::prelude::*;
 
 // Set Telegram Bot Token from @BotFather
-pub fn get_telegram_bot_token() -> String {
-    let tg_bot_token = env::var("TELEGRAM_BOT_TOKEN")
-            .expect("set TELEGRAM_BOT_TOKEN, thank you");
-    tg_bot_token
+pub fn get_telegram_bot() -> Bot {
+    Bot::from_env()
 }
 
 // Set Twitter API keys

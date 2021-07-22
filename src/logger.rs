@@ -3,7 +3,8 @@ use crate::file_handling::functions::*;
 use serde::Deserialize;
 
 use std::process::Command;
-use telegram_bot::*;
+use teloxide::prelude::*;
+use teloxide::types::InputFile;
 
 #[derive(Deserialize, Debug)]
 pub struct Logger {
@@ -13,7 +14,7 @@ pub struct Logger {
     updated_at: String,
 }
 
-pub fn run(telegram_api: &Api, chat: ChatId) {
+pub async fn run(tg_bot: &Bot, chat_id: i64) {
     // This script generates jsons that contain
     // logger url using Heroku API.
     Command::new("bash")
@@ -50,9 +51,9 @@ pub fn run(telegram_api: &Api, chat: ChatId) {
     formatted_log = str::replace(&formatted_log, "\\n", "\n");
 
     write_to_file("log.txt".to_string(), formatted_log.as_str());
-    telegram_api.spawn(chat
-        .document(&InputFileUpload::with_path("log.txt"))
-        .caption("log from previous execution")
-    );
 
+    tg_bot.send_document(chat_id, InputFile::File(std::path::PathBuf::from("log.txt")))
+        .send()
+        .await
+        .expect("Document could not be sent");
 }

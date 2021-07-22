@@ -19,7 +19,7 @@ pub fn get_logger_from_json<P: AsRef<Path>>(path: P) -> Result<Logger, Box<dyn e
     Ok(logger)
 }
 
-fn open_file(name: String) -> std::fs::File {
+pub fn open_file(name: String) -> std::fs::File {
     let file = OpenOptions::new()
         .write(true)
         .append(true)
