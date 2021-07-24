@@ -39,6 +39,9 @@ pub async fn send_tweets(tg_bot: Bot) {
     let mut users_iter = 0;
     let mut total_iter:u64 = 0;
 
+    // https://t.me/PlayVALORANT_tweets
+    let chat_id:i64 = -1001512385809;
+
     // LOOP FROM HERE
     'outer: loop {
         // print empty line to give a gap after each iteration
@@ -78,9 +81,6 @@ pub async fn send_tweets(tg_bot: Bot) {
         let mut latest_tweet = String::new();
         latest_tweet_file.read_to_string(&mut latest_tweet)
             .expect("File could not be read.");
-
-        // https://t.me/PlayVALORANT_tweets
-        let chat_id:i64 = -1001512385809;
 
         // Don't post the first set of tweets to channel to prevent reposts
         // Any new posts during updating or heroku dyno sleep cycle will be missed
