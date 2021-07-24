@@ -97,11 +97,12 @@ pub async fn send_tweets(tg_bot: Bot) {
                             })
                             .await
                             .expect("Thread panicked");
-
         println!("Final Tweet:\n{:?}", latest_tweet);
+
         // Do not attempt to post empty messages
         // This will happen in instances such as when we have a tweet that is replying to
         // another user.
+        // Don't post the first set of tweets to channel to prevent reposts
         if latest_tweet.to_string().ne("") && skip == 0 {
             tg_bot.send_message(chat_id, latest_tweet.to_string())
             .parse_mode(ParseMode::Html)
