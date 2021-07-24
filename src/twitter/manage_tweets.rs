@@ -42,6 +42,10 @@ pub async fn send_tweets(tg_bot: Bot) {
     // https://t.me/PlayVALORANT_tweets
     let chat_id:i64 = -1001512385809;
 
+    // We don't post the first set of tweets to channel to prevent reposts
+    // in case of a bot update or a dyno cycle
+    let mut skip = 0;
+
     // LOOP FROM HERE
     'outer: loop {
         // print empty line to give a gap after each iteration
@@ -83,8 +87,6 @@ pub async fn send_tweets(tg_bot: Bot) {
             .expect("File could not be read.");
 
         // Don't post the first set of tweets to channel to prevent reposts
-        // Any new posts during updating or heroku dyno sleep cycle will be missed
-        let mut skip = 0;
         if total_iter < TOTAL_USERS as u64 {
            skip = 1;
         }
@@ -121,6 +123,9 @@ pub async fn send_tweets(tg_bot: Bot) {
         }
 
         total_iter = total_iter + 1;
+
+        // reset skip
+        skip = 0;
     }
     // LOOP TILL HERE
 }
