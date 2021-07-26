@@ -43,7 +43,8 @@ pub async fn run(tg_bot: &Bot, chat_id: i64) {
                                     .arg(log_heroku_worker.logplex_url)
                                     .output()
                                     .expect("log_heroku_worker could not be reached OR curl could not be run.");
-    let mut formatted_log = format!("{:?}\n{:?}\n{:?}",  last_worker_log, last_api_log, last_heroku_worker_log);
+    let mut formatted_log = format!("{:#?}\n{:#?}\n{:#?}",
+                                last_worker_log, last_api_log, last_heroku_worker_log);
 
     // replace all \" with "
     formatted_log = str::replace(&formatted_log, "\\\"", "\"");
