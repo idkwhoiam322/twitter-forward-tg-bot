@@ -13,7 +13,7 @@ use chrono::prelude::*;
 async fn run() {
     let tg_bot = get_telegram_bot();
 
-    let chat_id:i64 = -540381478; // test chat
+    let chat_id:i64 = -1001527066155; // test chat
 
     let utc_time: DateTime<Utc> = chrono::Utc::now();
     let startpost_text = format!("Starting bot at {}-{}-{} {}:{}:{} UTC.",
