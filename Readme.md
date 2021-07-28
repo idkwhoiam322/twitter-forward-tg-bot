@@ -27,10 +27,9 @@ Use the one in this soure as an example.
 ```
 
 ## Image Preview:
-<p align="center">
+<p align="left">
 <img src="images/channel_preview.jpg" alt="Channel Preview" width="200"/>
-<br>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="images/channel_info.jpg" alt="Channel Info" width="200"/>
 </p>
 
