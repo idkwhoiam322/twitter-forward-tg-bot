@@ -5,6 +5,7 @@ use serde::Deserialize;
 use std::process::Command;
 use teloxide::prelude::*;
 use teloxide::types::InputFile;
+use std::str;
 
 #[derive(Deserialize, Debug)]
 pub struct Logger {
@@ -31,20 +32,39 @@ pub async fn run(tg_bot: &Bot, chat_id: i64) {
     delete_file("log.txt".to_string());
     create_file("log.txt".to_string());
 
-    let last_worker_log = Command::new("curl")
-                            .arg(log_worker.logplex_url)
-                            .output()
-                            .expect("log_worker could not be reached OR curl could not be run.");
-    let last_api_log = Command::new("curl")
-                        .arg(log_api.logplex_url)
-                        .output()
-                        .expect("log_api could not be reached OR curl could not be run.");
-    let last_heroku_worker_log = Command::new("curl")
+    let mut formatted_log = String::new();
+
+    if let Ok(value) = str::from_utf8(
+                                &Command::new("curl")
+                                    .arg(log_worker.logplex_url)
+                                    .output()
+                                    .expect("log_worker could not be reached OR curl could not be run.")
+                                    .stdout
+                            ) {
+                                formatted_log.push_str(format!("!!!!!App Worker Log:\n{}", value).as_str());
+                            };
+    if let Ok(value) = str::from_utf8(
+                                &Command::new("curl")
+                                    .arg(log_api.logplex_url)
+                                    .output()
+                                    .expect("log_api could not be reached OR curl could not be run.")
+                                    .stdout
+                            ) {
+                                formatted_log.push_str(format!("!!!!!App API Log:\n{}", value).as_str());
+                            };
+    if let Ok(value) = str::from_utf8(
+                                &Command::new("curl")
                                     .arg(log_heroku_worker.logplex_url)
                                     .output()
-                                    .expect("log_heroku_worker could not be reached OR curl could not be run.");
-    let mut formatted_log = format!("{:#?}\n{:#?}\n{:#?}",
-                                last_worker_log, last_api_log, last_heroku_worker_log);
+                                    .expect("log_heroku_worker could not be reached OR curl could not be run.")
+                                    .stdout
+                            ) {
+                                formatted_log.push_str(format!("!!!!!Heroku Worker Log:\n{}", value).as_str());
+                            };
+
+    if formatted_log.eq("") {
+        formatted_log = String::from("No log found.");
+    }
 
     // replace all \" with "
     formatted_log = str::replace(&formatted_log, "\\\"", "\"");
