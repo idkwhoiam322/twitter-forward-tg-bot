@@ -16,13 +16,13 @@ fn unshorten_tco(latest_tweet: &String) -> String {
     if latest_tweet.contains("https://t.co/") {
         for mat in Regex::new(r"\bhttps://t\.co/[a-zA-Z0-9]*\b").unwrap().find_iter(&latest_tweet) {
             let url = &latest_tweet[mat.start()..mat.end()];
-            println!("old url: {:?}", url);
+            log::info!("old url: {:?}", url);
             match urlexpand::unshorten(&url, None) {
                 Some(new_url) => {
                     new_tweet = str::replace(&new_tweet, url, &new_url);
-                    println!("new url: {:?}", new_url);
+                    log::info!("new url: {:?}", new_url);
                 }
-                None => println!("URL {:?} could not be expanded.", url),
+                None =>  log::debug!("URL {:?} could not be expanded.", url),
             };
         }
     }
@@ -49,10 +49,8 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
 
     // LOOP FROM HERE
     'outer: loop {
-        // print empty line to give a gap after each iteration
-        println!("");
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
-        println!("Iteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
+        log::info!("\nIteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
 
         // Delete any old files
         delete_file("latest_tweet.txt".to_string());
@@ -65,7 +63,7 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
 
         for status in feed.iter() {
             if  status.id == prev_id[users_iter] {
-                println!("No new tweet found! Sleeping for {:?}.", sleep_time);
+                log::debug!("No new tweet found! Sleeping for {:?}.", sleep_time);
                 thread::sleep(sleep_time);
                 // user must be changed before we go to next loop
                 // Check for next user
@@ -98,7 +96,7 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
                             })
                             .await
                             .expect("Thread panicked");
-        println!("Final Tweet:\n{:?}", latest_tweet);
+        log::info!("Final Tweet:\n{:?}", latest_tweet);
 
         // Do not attempt to post empty messages
         // This will happen in instances such as when we have a tweet that is replying to
@@ -110,7 +108,8 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
             .disable_web_page_preview(true)
             .send()
             .await
-            .expect("Message could not be sent");
+            .log_on_error()
+            .await;
         }
 
         for status in feed.iter() {

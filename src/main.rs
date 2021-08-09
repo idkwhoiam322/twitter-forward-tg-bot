@@ -16,6 +16,7 @@ use chrono::prelude::*;
 
 async fn run() -> Result<(), Box<dyn Error>> {
     let tg_bot = get_telegram_bot();
+    teloxide::enable_logging!();
 
     let chat_id:i64 = -1001527066155; // test chat
 
@@ -31,7 +32,8 @@ async fn run() -> Result<(), Box<dyn Error>> {
         .parse_mode(ParseMode::Html)
         .send()
         .await
-        .expect("Message could not be sent");
+        .log_on_error()
+        .await;
 
     logger::run(&tg_bot, chat_id).await;
 
