@@ -77,6 +77,13 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
         }
 
         for status in feed.iter().take(1) {
+            if let Some(user) = &status.user {
+                log::info!("\nNew post from: {:?}: https://twitter.com/{tw_screen_name}/status/{tw_id}",
+                    LIST_OF_USERS[users_iter],
+                    tw_screen_name = &user.screen_name,
+                    tw_id = &status.id);
+            }
+
             store_latest_tweet(&status, false);
         }
 
