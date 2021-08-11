@@ -50,7 +50,6 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
     // LOOP FROM HERE
     'outer: loop {
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
-        log::info!("\nIteration #{} for {:?}", total_iter, LIST_OF_USERS[users_iter]);
 
         // Delete any old files
         delete_file("latest_tweet.txt".to_string());
@@ -63,7 +62,6 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
 
         for status in feed.iter() {
             if  status.id == prev_id[users_iter] {
-                log::debug!("No new tweet found! Sleeping for {:?}.", sleep_time);
                 thread::sleep(sleep_time);
                 // user must be changed before we go to next loop
                 // Check for next user
