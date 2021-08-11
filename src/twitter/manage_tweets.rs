@@ -102,12 +102,12 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
         // Don't post the first set of tweets to channel to prevent reposts
         if latest_tweet.to_string().ne("") && skip == 0 {
             tg_bot.send_message(chat_id, latest_tweet.to_string())
-            .parse_mode(ParseMode::Html)
-            .disable_web_page_preview(true)
-            .send()
-            .await
-            .log_on_error()
-            .await;
+                .parse_mode(ParseMode::Html)
+                .disable_web_page_preview(true)
+                .send()
+                .await
+                .log_on_error()
+                .await;
         }
 
         for status in feed.iter() {
