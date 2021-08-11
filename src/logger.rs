@@ -22,29 +22,23 @@ pub async fn run(tg_bot: &Bot, chat_id: i64) {
         .output()
         .expect("Script could not be found.");
 
-    let log_worker = get_logger_from_json("worker_log_details.json").unwrap();
-    let log_api = get_logger_from_json("api_log_details.json").unwrap();
-    let log_heroku_worker = get_logger_from_json("heroku_worker_log_details.json").unwrap();
+    let log_worker = get_logger_from_json("log_request_details.json").unwrap();
 
     // Send logs of last bot runtime logs
     // Delete any old log files
     delete_file("log.txt".to_string());
     create_file("log.txt".to_string());
 
-    let last_worker_log = Command::new("curl")
-                            .arg(log_worker.logplex_url)
-                            .output()
-                            .expect("log_worker could not be reached OR curl could not be run.");
-    let last_api_log = Command::new("curl")
-                        .arg(log_api.logplex_url)
-                        .output()
-                        .expect("log_api could not be reached OR curl could not be run.");
-    let last_heroku_worker_log = Command::new("curl")
-                                    .arg(log_heroku_worker.logplex_url)
+    let mut formatted_log = match std::str::from_utf8(
+                                &Command::new("curl")
+                                    .arg(log_worker.logplex_url)
                                     .output()
-                                    .expect("log_heroku_worker could not be reached OR curl could not be run.");
-    let mut formatted_log = format!("{:#?}\n{:#?}\n{:#?}",
-                                last_worker_log, last_api_log, last_heroku_worker_log);
+                                    .expect("log_worker could not be reached OR curl could not be run.")
+                                    .stdout
+                            ) {
+                                Ok(value) => format!("{}", value),
+                                _ => String::from("No log found.")
+                            };
 
     // replace all \" with "
     formatted_log = str::replace(&formatted_log, "\\\"", "\"");

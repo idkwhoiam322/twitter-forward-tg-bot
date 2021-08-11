@@ -4,32 +4,8 @@
 # Remove deprecated jsons
 rm -rf *.json;
 
-curl -o "worker_log_details.json" -n -X POST https://api.heroku.com/apps/twitter-forward-tg-bot/log-sessions \
-  -d '{
-  "dyno": "worker",
-  "lines": 1500,
-  "source": "app"
-}' \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer $HEROKU_API_KEY";
-
-curl -o "api_log_details.json" -n -X POST https://api.heroku.com/apps/twitter-forward-tg-bot/log-sessions \
-  -d '{
-  "dyno": "api",
-  "lines": 1500,
-  "source": "app"
-}' \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer $HEROKU_API_KEY";
-
-curl -o "heroku_worker_log_details.json" -n -X POST https://api.heroku.com/apps/twitter-forward-tg-bot/log-sessions \
-  -d '{
-  "dyno": "worker",
-  "lines": 1500,
-  "source": "heroku"
-}' \
+curl -o "log_request_details.json" -n -X POST https://api.heroku.com/apps/twitter-forward-tg-bot/log-sessions \
+  -d "{\"lines\": 1500}" \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3" \
   -H "Authorization: Bearer $HEROKU_API_KEY";
