@@ -1,8 +1,8 @@
 use crate::users::LIST_OF_USERS;
 use crate::file_handling::functions::*;
+use crate::twitter::manage_tweets::FILE_NAME;
 
 pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
-    let file_name = "latest_tweet.txt";
     let mut do_not_skip = false;
 
     // Skip if not replying to same user, ie. if it is not a thread
@@ -52,20 +52,20 @@ pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
             tw_username = &user.name,
             tw_id = tweet.id
         );
-        write_to_file(file_name, formatted_entry.as_str());
+        write_to_file(FILE_NAME, formatted_entry.as_str());
     }
 
     if let Some(ref _screen_name) = tweet.in_reply_to_screen_name {
         let formatted_entry = format!("➜ Thread reply:");
-        write_to_file(file_name, formatted_entry.as_str());
+        write_to_file(FILE_NAME, formatted_entry.as_str());
     }
 
     let formatted_entry = format!("{}", &tweet.text);
-    write_to_file(file_name, formatted_entry.as_str());
+    write_to_file(FILE_NAME, formatted_entry.as_str());
 
     if let Some(ref status) = tweet.quoted_status {
         let formatted_entry = format!("{}","➜ Quoting the following status:");
-        write_to_file(file_name, formatted_entry.as_str());
+        write_to_file(FILE_NAME, formatted_entry.as_str());
         store_latest_tweet(status, false);
     }
 }

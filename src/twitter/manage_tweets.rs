@@ -11,6 +11,8 @@ use teloxide::types::ParseMode;
 use std::{thread, time};
 use regex::Regex;
 
+pub static FILE_NAME: &str = "latest_tweet.txt";
+
 fn unshorten_tco(latest_tweet: &String) -> String {
     let mut new_tweet = latest_tweet.clone();
     if latest_tweet.contains("https://t.co/") {
@@ -47,17 +49,15 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
     // in case of a bot update or a dyno cycle
     let mut skip = 0;
 
-    let file_name = "latest_tweet.txt";
-
     // LOOP FROM HERE
     'outer: loop {
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
 
         // Delete any old files
-        delete_file(file_name);
+        delete_file(FILE_NAME);
 
         // create new file to store latest tweet
-        let mut latest_tweet_file = create_file(file_name);
+        let mut latest_tweet_file = create_file(FILE_NAME);
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
         let (_f, feed) = f.start().await?;
