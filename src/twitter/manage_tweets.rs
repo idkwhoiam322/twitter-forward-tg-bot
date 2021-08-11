@@ -47,15 +47,17 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
     // in case of a bot update or a dyno cycle
     let mut skip = 0;
 
+    let file_name = "latest_tweet.txt";
+
     // LOOP FROM HERE
     'outer: loop {
         let target_user = user::UserID::ScreenName(LIST_OF_USERS[users_iter].into());
 
         // Delete any old files
-        delete_file("latest_tweet.txt".to_string());
+        delete_file(file_name);
 
         // create new file to store latest tweet
-        let mut latest_tweet_file = create_file("latest_tweet.txt".to_string());
+        let mut latest_tweet_file = create_file(file_name);
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
         let (_f, feed) = f.start().await?;
