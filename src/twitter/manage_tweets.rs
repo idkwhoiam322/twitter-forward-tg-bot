@@ -3,7 +3,6 @@ use crate::creds::credentials::*;
 use crate::file_handling::functions::*;
 use crate::storage::store_latest_tweet;
 
-use std::error::Error;
 use std::io::Read;
 use egg_mode::user;
 use teloxide::prelude::*;
@@ -31,7 +30,7 @@ fn unshorten_tco(latest_tweet: &String) -> String {
     new_tweet
 }
 
-pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
+pub async fn send_tweets(tg_bot: Bot) {
     let twitter_token = get_twitter_token();
 
     let sleep_time = time::Duration::from_millis(1000);
@@ -60,7 +59,7 @@ pub async fn send_tweets(tg_bot: Bot) -> Result<(), Box<dyn Error>> {
         let mut latest_tweet_file = create_file(FILE_NAME);
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
-        let feed = f.start().await?.1;
+        let feed = f.start().await.unwrap().1;
 
         for status in feed.iter() {
             if  status.id == prev_id[users_iter] {

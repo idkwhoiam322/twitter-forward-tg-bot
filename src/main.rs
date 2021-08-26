@@ -7,14 +7,13 @@ mod logger;
 mod twitter;
 use twitter::manage_tweets::send_tweets;
 
-use std::error::Error;
 use teloxide::prelude::*;
 use teloxide::types::{
     ParseMode, Me,
 };
 use chrono::prelude::*;
 
-async fn run() -> Result<(), Box<dyn Error>> {
+async fn run() {
     let tg_bot = get_telegram_bot();
     teloxide::enable_logging!();
 
@@ -37,12 +36,10 @@ async fn run() -> Result<(), Box<dyn Error>> {
 
     logger::run(&tg_bot, chat_id).await;
 
-    send_tweets(tg_bot).await?;
-    Ok(())
+    send_tweets(tg_bot).await;
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    run().await.unwrap();
-    Ok(())
+async fn main() {
+    run().await;
 }
