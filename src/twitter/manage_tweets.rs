@@ -59,7 +59,15 @@ pub async fn send_tweets(tg_bot: Bot) {
         let mut latest_tweet_file = create_file(FILE_NAME);
 
         let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
-        let feed = f.start().await.unwrap().1;
+        let feed = match f.start().await {
+            Ok(val) => {
+                val.1
+            },
+            Err(e) => {
+                log::warn!("{}", e);
+                continue 'outer;
+            }
+        };
 
         for status in feed.iter() {
             if  status.id == prev_id[users_iter] {
