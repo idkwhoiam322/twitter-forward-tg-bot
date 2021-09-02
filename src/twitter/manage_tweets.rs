@@ -58,7 +58,7 @@ pub async fn send_tweets(tg_bot: Bot) {
         // create new file to store latest tweet
         let mut latest_tweet_file = create_file(FILE_NAME);
 
-        let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token);
+        let f = egg_mode::tweet::user_timeline::<user::UserID>(target_user, true, true, &twitter_token).with_page_size(1);
         let feed = match f.start().await {
             Ok(val) => {
                 val.1
