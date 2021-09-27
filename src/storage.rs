@@ -3,7 +3,7 @@ use crate::file_handling::functions::*;
 use crate::twitter::manage_tweets::FILE_NAME;
 
 pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
-    let mut do_not_skip = false;
+    let mut skip = true;
 
     // Skip if not replying to same user, ie. if it is not a thread
     // We do not want to share replies that are just thank yous and such.
@@ -19,10 +19,10 @@ pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
         // If id_1234 is then retweeted, it will be shared.
         // TL;DR: Post retweeted replies.
         if is_retweet {
-            do_not_skip = true;
+            skip = false;
         }
         // Replying to someone that isn't the original thread starter
-        if user.screen_name.ne(&screen_name.to_string()) && !do_not_skip {
+        if user.screen_name.ne(&screen_name.to_string()) && skip {
             return;
         }
     }
@@ -33,7 +33,7 @@ pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
     // so it is unnecessary to share the retweet as well.
     for user in &tweet.entities.user_mentions {
         for cur_user in LIST_OF_USERS {
-            if user.screen_name.eq(cur_user) && is_retweet && !do_not_skip {
+            if user.screen_name.eq(cur_user) && is_retweet && skip {
                 return;
             }
         }
