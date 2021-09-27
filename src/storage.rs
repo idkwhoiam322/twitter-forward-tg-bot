@@ -47,7 +47,7 @@ pub fn store_latest_tweet(tweet: &egg_mode::tweet::Tweet, is_retweet: bool) {
     if let Some(ref user) = tweet.user {
         let formatted_entry = format!(
             "<a href='https://twitter.com/{tw_screen_name}/status/{tw_id}'>Tweet Source</a>\n\
-            {tw_username} (<a href='https://twitter.com/{tw_screen_name}'>@{tw_screen_name}</a>):",
+            <b>{tw_username} (<a href='https://twitter.com/{tw_screen_name}'>@{tw_screen_name}</a>):</b>",
             tw_screen_name = &user.screen_name,
             tw_username = &user.name,
             tw_id = tweet.id
